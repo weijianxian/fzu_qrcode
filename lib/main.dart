@@ -24,12 +24,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FZUQrCode',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: const TextTheme(
-            bodyLarge: TextStyle(fontFamily: "JetBrainsMono"),
-            bodyMedium: TextStyle(fontFamily: "JetBrainsMono"),
-            bodySmall: TextStyle(fontFamily: "JetBrainsMono"),
-          )),
+        primarySwatch: Colors.blue,
+        fontFamily: "JetBrainsMono", // 设置全局字体
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(),
+          bodyMedium: TextStyle(),
+          bodySmall: TextStyle(),
+          displayLarge: TextStyle(),
+          displayMedium: TextStyle(),
+          displaySmall: TextStyle(),
+          titleLarge: TextStyle(),
+          titleMedium: TextStyle(),
+          titleSmall: TextStyle(),
+          labelLarge: TextStyle(),
+          labelMedium: TextStyle(),
+          labelSmall: TextStyle(),
+        ),
+      ),
       home: const MyHomePage(title: 'FZUQrCode'),
     );
   }

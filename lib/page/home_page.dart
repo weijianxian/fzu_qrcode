@@ -41,71 +41,50 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: PageView(
-        scrollDirection: Axis.vertical,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return ListView(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '欢迎, ${userData.name}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                        const Text('消费码:', textAlign: TextAlign.center),
-                        const SizedBox(height: 20),
-                        if (userData.payIdList.isNotEmpty)
-                          QrImageView(
-                            data: userData.payIdList.first['prePayId'],
-                            version: QrVersions.auto,
-                            size: constraints.maxWidth * 0.6,
-                          ),
-                        const SizedBox(height: 20),
-                        if (userData.payIdList.isNotEmpty)
-                          BarCodeImage(
-                            params: Code128BarCodeParams(
-                              userData.payIdList.first['prePayId'],
-                              withText: true,
-                            ),
-                          ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _refreshPayId,
-                          child: const Text('刷新消费码'),
-                        ),
-                      ],
+      body: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (userData.isLoggedIn) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '欢迎, ${userData.name}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  const Text('消费码:', textAlign: TextAlign.center),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: QrImageView(
+                      data: userData.payIdList.first['prePayId'],
+                      version: QrVersions.auto,
+                      size: constraints.maxWidth * 0.6,
                     ),
-                  ],
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: ListView(
-              children: [
-                const Text(
-                  '调试信息:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                ...userData.payIdList.map((payId) {
-                  return ListTile(
-                    title: Text('Pay ID: ${payId['prePayId']}'),
-                    subtitle: Text('Expired Time: ${payId['expiredTime']}'),
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: BarCodeImage(
+                      params: Code128BarCodeParams(
+                        userData.payIdList.first['prePayId'],
+                        withText: true,
+                        lineWidth: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _refreshPayId,
+                    child: const Text('刷新消费码'),
+                  ),
+                ],
+              );
+            } else {
+              return const Text('请先登录');
+            }
+          },
+        ),
       ),
     );
   }

@@ -14,12 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-    _refreshPayId();
-  }
-
   Future<void> _refreshPayId() async {
     final userData = Provider.of<UserData>(context, listen: false);
     try {
@@ -35,7 +29,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
-
+    if (userData.payIdList.isEmpty) {
+      _refreshPayId();
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -56,23 +52,25 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const Text('消费码:', textAlign: TextAlign.center),
                   const SizedBox(height: 20),
-                  Center(
-                    child: QrImageView(
-                      data: userData.payIdList.first['prePayId'],
-                      version: QrVersions.auto,
-                      size: constraints.maxWidth * 0.6,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Center(
-                    child: BarCodeImage(
-                      params: Code128BarCodeParams(
-                        userData.payIdList.first['prePayId'],
-                        withText: true,
-                        lineWidth: 1,
+                  if (userData.payIdList.isNotEmpty)
+                    Center(
+                      child: QrImageView(
+                        data: userData.payIdList.first.prePayId,
+                        version: QrVersions.auto,
+                        size: constraints.maxWidth * 0.6,
                       ),
                     ),
-                  ),
+                  const SizedBox(height: 20),
+                  if (userData.payIdList.isNotEmpty)
+                    Center(
+                      child: BarCodeImage(
+                        params: Code128BarCodeParams(
+                          userData.payIdList.first.prePayId,
+                          withText: true,
+                          lineWidth: 1,
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _refreshPayId,

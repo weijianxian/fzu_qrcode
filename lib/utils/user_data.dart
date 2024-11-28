@@ -2,6 +2,77 @@ import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'file_storage.dart';
 
+class PayId {
+  final String devId;
+  final String payAcctId;
+  final String prePayId;
+  final String payPrdCode;
+  final String expiredTime;
+
+  PayId({
+    required this.devId,
+    required this.payAcctId,
+    required this.prePayId,
+    required this.payPrdCode,
+    required this.expiredTime,
+  });
+
+  factory PayId.fromJson(Map<String, dynamic> json) {
+    return PayId(
+      devId: json['devId'],
+      payAcctId: json['payAcctId'],
+      prePayId: json['prePayId'],
+      payPrdCode: json['payPrdCode'],
+      expiredTime: json['expiredTime'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'devId': devId,
+      'payAcctId': payAcctId,
+      'prePayId': prePayId,
+      'payPrdCode': payPrdCode,
+      'expiredTime': expiredTime,
+    };
+  }
+}
+
+class QrCodeResponse {
+  final int code;
+  final String msg;
+  final String requestId;
+  final List<PayId> data;
+
+  QrCodeResponse({
+    required this.code,
+    required this.msg,
+    required this.requestId,
+    required this.data,
+  });
+
+  factory QrCodeResponse.fromJson(Map<String, dynamic> json) {
+    var list = json['data'] as List;
+    List<PayId> payIdList = list.map((i) => PayId.fromJson(i)).toList();
+
+    return QrCodeResponse(
+      code: json['code'],
+      msg: json['msg'],
+      requestId: json['requestId'],
+      data: payIdList,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'msg': msg,
+      'requestId': requestId,
+      'data': data.map((payId) => payId.toJson()).toList(),
+    };
+  }
+}
+
 class UserData with ChangeNotifier {
   String _studentId = '';
   String _password = '';
@@ -9,8 +80,9 @@ class UserData with ChangeNotifier {
   String _name = '';
   String _deptName = '';
   String _parentDeptName = '';
-  List<Map<String, dynamic>> _payIdList = [];
+  List<PayId> _payIdList = [];
   final FileStorage _storage = FileStorage();
+  final dio = Dio();
 
   UserData() {
     _loadData();
@@ -22,7 +94,7 @@ class UserData with ChangeNotifier {
   String get name => _name;
   String get deptName => _deptName;
   String get parentDeptName => _parentDeptName;
-  List<Map<String, dynamic>> get payIdList => _payIdList;
+  List<PayId> get payIdList => _payIdList;
   bool get isLoggedIn => _accessToken.isNotEmpty;
 
   void setStudentId(String id) {
@@ -45,7 +117,10 @@ class UserData with ChangeNotifier {
     _name = data['name'] ?? '';
     _deptName = data['deptName'] ?? '';
     _parentDeptName = data['parentDeptName'] ?? '';
-    _payIdList = List<Map<String, dynamic>>.from(data['payIdList'] ?? []);
+    _payIdList = (data['payIdList'] as List?)
+            ?.map((item) => PayId.fromJson(item as Map<String, dynamic>))
+            .toList() ??
+        [];
     notifyListeners();
   }
 
@@ -57,14 +132,13 @@ class UserData with ChangeNotifier {
       'name': _name,
       'deptName': _deptName,
       'parentDeptName': _parentDeptName,
-      'payIdList': _payIdList,
+      'payIdList': _payIdList.map((payId) => payId.toJson()).toList(),
     };
     await _storage.writeData(data);
   }
 
   Future<bool> loginAndSaveToken() async {
     try {
-      final dio = Dio();
       final response = await dio.post(
         'https://oss.fzu.edu.cn/api/qr/login/getAccessToken',
         data: {
@@ -100,7 +174,7 @@ class UserData with ChangeNotifier {
           throw Exception("无法成功登录: \n$responseData");
       }
     } catch (e) {
-      throw Exception('登录时发生错误: \n$e\n请检查密码或截图联系开发者');
+      throw Exception('登录时发生错误: \n$e');
     }
   }
 
@@ -109,7 +183,6 @@ class UserData with ChangeNotifier {
       return;
     }
 
-    final dio = Dio();
     try {
       final response = await dio.post(
         'https://oss.fzu.edu.cn/api/qr/deal/getQrCode',
@@ -132,7 +205,7 @@ class UserData with ChangeNotifier {
       switch (responseData['msg']) {
         case '请求成功':
           _payIdList = (responseData['data'] as List)
-              .map((item) => item as Map<String, dynamic>)
+              .map((item) => PayId.fromJson(item as Map<String, dynamic>))
               .toList();
           notifyListeners();
           _saveData();
@@ -141,7 +214,19 @@ class UserData with ChangeNotifier {
           throw Exception("无法获得payid: \n$responseData");
       }
     } catch (e) {
-      throw Exception('获取PayID时发生错误: \n$e\n请重试或联系管理员');
+      throw Exception('获取PayID时发生错误: \n$e');
     }
+  }
+
+  Future<void> logout() async {
+    _studentId = "";
+    _password = "";
+    _accessToken = "";
+    _name = "";
+    _deptName = "";
+    _parentDeptName = "";
+    _payIdList.clear();
+    notifyListeners();
+    await _storage.deleteData();
   }
 }

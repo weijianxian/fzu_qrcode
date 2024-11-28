@@ -64,9 +64,9 @@ class _UserPageState extends State<UserPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.account_circle,
-              size: 100,
+            Text(
+              '欢迎, ${userData.name}',
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -92,39 +92,56 @@ class _UserPageState extends State<UserPage> {
               },
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                userData.setStudentId(_studentIdController.text);
-                userData.setPassword(_passwordController.text);
-                if (userData.studentId.isEmpty || userData.password.isEmpty) {
-                  DialogUtils.showAlertDialog(context, '错误', '学号和密码不能为空');
-                  return;
-                }
-                _showLoadingDialog(context);
-                final currentContext = context;
-                try {
-                  bool success = await userData.loginAndSaveToken();
-                  if (success) {
-                    await userData.getPayId();
-                    if (mounted) {
-                      _hideLoadingDialog(currentContext);
-                      DialogUtils.showAlertDialog(currentContext, '成功', '登录成功');
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    userData.setStudentId(_studentIdController.text);
+                    userData.setPassword(_passwordController.text);
+                    if (userData.studentId.isEmpty ||
+                        userData.password.isEmpty) {
+                      DialogUtils.showAlertDialog(context, '错误', '学号和密码不能为空');
+                      return;
                     }
-                  } else {
-                    if (mounted) {
-                      _hideLoadingDialog(currentContext);
-                      DialogUtils.showAlertDialog(currentContext, '错误', '登录失败');
+                    _showLoadingDialog(context);
+                    final currentContext = context;
+                    try {
+                      bool success = await userData.loginAndSaveToken();
+                      if (success) {
+                        await userData.getPayId();
+                        if (mounted) {
+                          _hideLoadingDialog(currentContext);
+                          DialogUtils.showAlertDialog(
+                              currentContext, '成功', '登录成功');
+                        }
+                      } else {
+                        if (mounted) {
+                          _hideLoadingDialog(currentContext);
+                          DialogUtils.showAlertDialog(
+                              currentContext, '错误', '登录失败');
+                        }
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        _hideLoadingDialog(currentContext);
+                        DialogUtils.showAlertDialog(currentContext, '错误',
+                            '发生错误：\n${e.toString()}\n请重试或联系管理员');
+                      }
                     }
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    _hideLoadingDialog(currentContext);
-                    DialogUtils.showAlertDialog(currentContext, '错误',
-                        '发生错误：\n${e.toString()}\n请重试或联系管理员');
-                  }
-                }
-              },
-              child: const Text("登录"),
+                  },
+                  child: const Text("登录"),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    userData.logout();
+                    _studentIdController.text = '';
+                    _passwordController.text = '';
+                  },
+                  child: const Text("登出"),
+                ),
+              ],
             )
           ],
         ),

@@ -30,4 +30,11 @@ class FileStorage {
     final file = await _localFile;
     return file.writeAsString(jsonEncode(data));
   }
+
+  Future<void> deleteData() async {
+    final file = await _localFile;
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }
 }

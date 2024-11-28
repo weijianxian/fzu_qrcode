@@ -32,58 +32,63 @@ class _HomePageState extends State<HomePage> {
     if (userData.payIdList.isEmpty) {
       _refreshPayId();
     }
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (userData.isLoggedIn) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '欢迎, ${userData.name}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  const Text('消费码:', textAlign: TextAlign.center),
-                  const SizedBox(height: 20),
-                  if (userData.payIdList.isNotEmpty)
-                    Center(
-                      child: QrImageView(
-                        data: userData.payIdList.first.prePayId,
-                        version: QrVersions.auto,
-                        size: constraints.maxWidth * 0.6,
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  if (userData.payIdList.isNotEmpty)
-                    Center(
-                      child: BarCodeImage(
-                        params: Code128BarCodeParams(
-                          userData.payIdList.first.prePayId,
-                          withText: true,
-                          lineWidth: 1,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _refreshPayId,
-                    child: const Text('刷新消费码'),
-                  ),
-                ],
-              );
-            } else {
-              return const Text('请先登录');
-            }
-          },
+    if (userData.isLoggedIn && userData.payIdList.isNotEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '欢迎, ${userData.name}',
+                textAlign: TextAlign.center,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              const Text('消费码:', textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              Center(
+                child: QrImageView(
+                  data: userData.payIdList.first.prePayId,
+                  version: QrVersions.auto,
+                  size: MediaQuery.of(context).size.width >=
+                          MediaQuery.of(context).size.height
+                      ? MediaQuery.of(context).size.height * 0.4
+                      : MediaQuery.of(context).size.width * 0.8,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: BarCodeImage(
+                  params: Code128BarCodeParams(
+                    userData.payIdList.first.prePayId,
+                    withText: true,
+                    lineWidth: 1,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _refreshPayId,
+          child: const Icon(Icons.refresh),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+        ),
+        body: const Center(
+          child: Text("请先登录"),
+        ),
+      );
+    }
   }
 }

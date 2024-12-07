@@ -30,13 +30,33 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      # 构建 APK
-      - name: Build APK
-        run: flutter build apk --release
+      # 构建并签名 APK
+      - name: Build and Sign APK
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > android/app/keystore.jks
+          export KEYSTORE_PATH=keystore.jks
+          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi
 
-      # 上传 APK
-      - name: Upload APK
+      # 上传 armeabi-v7a APK
+      - name: Upload armeabi-v7a APK
         uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-armeabi-v7a-release
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      # 上传 arm64-v8a APK
+      - name: Upload arm64-v8a APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-arm64-v8a-release
+          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+      # 上传 x86_64 APK
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-x86_64-release
+          path: build/app/outputs/flutter-apk/app-x86_64-release.apk

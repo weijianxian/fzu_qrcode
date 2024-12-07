@@ -23,5 +23,18 @@ Tools • Dart 3.5.4 • DevTools 2.37.3
 
 1. 确保你已经安装了 Flutter SDK，并且配置了 Flutter 环境。
 2. 在项目根目录下运行以下命令以获取项目依赖： `flutter pub get`
-3. 运行以下命令以构建应用：`flutter build <platform>` 如 `flutter build apk --release`
-4. 构建完成后，生成的构建文件将位于 build 目录下。
+3. 1. build APK
+
+```sh
+export KEYSTORE_PATH=path/to/your/keystore.jks
+export KEYSTORE_PASSWORD=your_keystore_password
+export KEY_ALIAS=your_key_alias
+export KEY_PASSWORD=your_key_password
+flutter build apk --release
+```
+
+3. 2. build exe
+
+```sh
+flutter build windows --release
+```

@@ -25,14 +25,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.11.0"
-  barcode_widgets:
-    dependency: "direct main"
-    description:
-      name: barcode_widgets
-      sha256: a375d6a080eedfd3a43f4aa2616ba422fefc849cbf7645e8fd42d1134b94cf7f
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.0"
   boolean_selector:
     dependency: transitive
     description:

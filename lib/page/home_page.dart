@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:barcode_widgets/barcode_flutter.dart';
 import '../utils/user_data.dart';
 import '../utils/dialog_utils.dart';
+import '../utils/theme_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -37,6 +37,21 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
+          actions: [
+            IconButton(
+              onPressed: () {
+                DialogUtils.showAlertDialog(context, "关于", "FZUQrCode");
+              },
+              icon: const Icon(Icons.info),
+            ),
+            IconButton(
+              icon: const Icon(Icons.brightness_6),
+              onPressed: () {
+                Provider.of<ThemeDataNotifier>(context, listen: false)
+                    .toggleTheme();
+              },
+            ),
+          ],
         ),
         body: Center(
           child: Column(
@@ -53,21 +68,26 @@ class _HomePageState extends State<HomePage> {
               Center(
                 child: QrImageView(
                   data: userData.payIdList.first.prePayId,
-                  version: QrVersions.auto,
+                  eyeStyle: QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  dataModuleStyle: QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Colors.white,
                   size: MediaQuery.of(context).size.width >=
                           MediaQuery.of(context).size.height
                       ? MediaQuery.of(context).size.height * 0.4
                       : MediaQuery.of(context).size.width * 0.8,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: BarCodeImage(
-                  params: Code128BarCodeParams(
-                    userData.payIdList.first.prePayId,
-                    withText: true,
-                    lineWidth: 1,
-                  ),
                 ),
               ),
               const SizedBox(height: 20),

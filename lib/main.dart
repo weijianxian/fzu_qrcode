@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'utils/theme_data.dart';
 import './page/home_page.dart';
 import './page/personal_page.dart';
 import './utils/user_data.dart';
@@ -10,6 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserData()),
+        ChangeNotifierProvider(create: (_) => ThemeDataNotifier()),
       ],
       child: const MyApp(),
     ),
@@ -23,25 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FZUQrCode',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: "JetBrainsMono", // 设置全局字体
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(),
-          bodyMedium: TextStyle(),
-          bodySmall: TextStyle(),
-          displayLarge: TextStyle(),
-          displayMedium: TextStyle(),
-          displaySmall: TextStyle(),
-          titleLarge: TextStyle(),
-          titleMedium: TextStyle(),
-          titleSmall: TextStyle(),
-          labelLarge: TextStyle(),
-          labelMedium: TextStyle(),
-          labelSmall: TextStyle(),
-        ),
-        splashFactory: NoSplash.splashFactory, // 禁用水波纹效果
-      ),
+      theme: Provider.of<ThemeDataNotifier>(context).themeData,
       home: const MyHomePage(title: 'FZUQrCode'),
     );
   }

@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
           labelMedium: TextStyle(),
           labelSmall: TextStyle(),
         ),
+        splashFactory: NoSplash.splashFactory, // 禁用水波纹效果
       ),
       home: const MyHomePage(title: 'FZUQrCode'),
     );
@@ -56,6 +57,7 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
   static const List<Widget> _pages = <Widget>[
     HomePage(title: "主页"),
@@ -66,59 +68,40 @@ class MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth / constraints.maxHeight >= 1) {
-          // 屏幕宽度大于高度，使用侧栏
-          return Scaffold(
-            body: Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended:
-                        constraints.maxWidth / constraints.maxHeight >= 1.5,
-                    destinations: const [
-                      NavigationRailDestination(
-                          icon: Icon(Icons.home), label: Text('主页')),
-                      NavigationRailDestination(
-                          icon: Icon(Icons.person), label: Text('我的')),
-                    ],
-                    selectedIndex: _selectedIndex,
-                    onDestinationSelected: _onItemTapped,
-                  ),
-                ),
-                Expanded(
-                  child: _pages[_selectedIndex],
-                ),
-              ],
-            ),
-          );
-        } else {
-          // 屏幕高度大于宽度，使用底部导航栏
-          return Scaffold(
-            body: _pages[_selectedIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: '主页',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: '我的',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.amber[800],
-              onTap: _onItemTapped,
-            ),
-          );
-        }
-      },
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '主页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '我的',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

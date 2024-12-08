@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     if (userData.isLoggedIn && userData.payIdList.isNotEmpty) {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           title: Text(widget.title),
           actions: [
             IconButton(
@@ -65,29 +65,27 @@ class _HomePageState extends State<HomePage> {
               ),
               const Text('消费码:', textAlign: TextAlign.center),
               const SizedBox(height: 20),
-              Center(
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
                 child: QrImageView(
                   data: userData.payIdList.first.prePayId,
-                  eyeStyle: QrEyeStyle(
-                    eyeShape: QrEyeShape.square,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                  dataModuleStyle: QrDataModuleStyle(
-                    dataModuleShape: QrDataModuleShape.square,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                  backgroundColor:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.black
-                          : Colors.white,
+                  backgroundColor: Colors.white,
                   size: MediaQuery.of(context).size.width >=
                           MediaQuery.of(context).size.height
                       ? MediaQuery.of(context).size.height * 0.4
-                      : MediaQuery.of(context).size.width * 0.8,
+                      : MediaQuery.of(context).size.width * 0.7,
                 ),
               ),
               const SizedBox(height: 20),
@@ -106,7 +104,7 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.title),
         ),
         body: const Center(
-          child: Text("请先登录"),
+          child: Text("请先登录", style: TextStyle(fontSize: 30)),
         ),
       );
     }

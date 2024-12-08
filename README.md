@@ -3,13 +3,14 @@
 </p>
 
 <h1 align="center">fzu_qrcode</h1>
-<div align="center">因为懒得使用莎宝小程序，所以写了个app</div>
+<div align="center">因为懒得使用福大一码通小程序，所以写了个app</div>
 
 ## 使用方法
 
 ### 直接下载
 
-请前往 [Action](https://github.com/weijianxian/fzu_qrcode/actions) 下载最新构建或前往 [Release](https://github.com/weijianxian/fzu_qrcode/releases) 下载稳定版本
+请前往 [Action](https://github.com/weijianxian/fzu_qrcode/actions) 下载最新构建
+或前往 [Release](https://github.com/weijianxian/fzu_qrcode/releases/latest) 下载最新稳定版本
 
 ### 手动构建
 
@@ -26,6 +27,7 @@ Tools • Dart 3.5.4 • DevTools 2.37.3
 3. 1. build APK
 
 ```sh
+# 配置签名
 export KEYSTORE_PATH=path/to/your/keystore.jks
 export KEYSTORE_PASSWORD=your_keystore_password
 export KEY_ALIAS=your_key_alias

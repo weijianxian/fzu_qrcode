@@ -7,6 +7,10 @@ class ThemeDataNotifier with ChangeNotifier {
   get isDarkMode => _isDarkMode;
 
   ThemeData get lightTheme => ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.light,
+        ),
         brightness: Brightness.light,
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
@@ -22,7 +26,10 @@ class ThemeDataNotifier with ChangeNotifier {
       );
 
   ThemeData get darkTheme => ThemeData(
-        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent, // 去除状态栏遮罩

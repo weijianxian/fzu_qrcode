@@ -4,8 +4,18 @@ import 'models/theme_data.dart';
 import 'views/page/home_page.dart';
 import 'views/page/personal_page.dart';
 import 'models/user_data.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
+    statusBarColor: Colors.transparent,
+  ));
+
   runApp(
     MultiProvider(
       providers: [

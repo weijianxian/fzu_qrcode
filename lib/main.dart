@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'utils/theme_data.dart';
-import './page/home_page.dart';
-import './page/personal_page.dart';
-import './utils/user_data.dart';
+import 'models/theme_data.dart';
+import 'views/page/home_page.dart';
+import 'views/page/personal_page.dart';
+import 'models/user_data.dart';
 
 void main() {
   runApp(

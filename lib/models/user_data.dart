@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
-import 'file_storage.dart';
+import '../utils/file_storage.dart';
 
 class PayId {
   final String devId;

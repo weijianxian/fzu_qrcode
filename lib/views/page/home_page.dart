@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../utils/user_data.dart';
-import '../utils/dialog_utils.dart';
-import '../utils/theme_data.dart';
+import '../../models/user_data.dart';
+import '../../utils/dialog_utils.dart';
+import '../../models/theme_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
               const Text('消费码:', textAlign: TextAlign.center),
               const SizedBox(height: 20),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,

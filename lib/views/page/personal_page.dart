@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../utils/user_data.dart';
-import '../utils/dialog_utils.dart';
+import '../../models/user_data.dart';
+import '../../utils/dialog_utils.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key, required this.title});

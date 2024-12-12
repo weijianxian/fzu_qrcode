@@ -16,8 +16,6 @@ class ThemeDataNotifier with ChangeNotifier {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent, // 去除状态栏遮罩
             statusBarIconBrightness: Brightness.dark, // 状态栏图标字体颜色
-            systemNavigationBarColor:
-                Color.fromARGB(255, 242, 247, 251), // 底部导航栏颜色
           ),
         ),
         primarySwatch: Colors.blue,
@@ -34,7 +32,6 @@ class ThemeDataNotifier with ChangeNotifier {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent, // 去除状态栏遮罩
             statusBarIconBrightness: Brightness.light, // 状态栏图标字体颜色
-            systemNavigationBarColor: Colors.black, // 底部导航栏颜色
           ),
         ),
         primarySwatch: Colors.blue,

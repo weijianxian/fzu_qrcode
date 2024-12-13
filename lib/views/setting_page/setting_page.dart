@@ -175,7 +175,7 @@ class _SettingPageState extends State<SettingPage> {
               leading: const Icon(Icons.bug_report),
               title: const Text("报告问题"),
               subtitle: const Text(
-                  " https://github.com/weijianxian/fzu_qrcode/issues"),
+                  "https://github.com/weijianxian/fzu_qrcode/issues"),
               onTap: () => launchUrlString(
                   "https://github.com/weijianxian/fzu_qrcode/issues"),
               trailing: const Icon(Icons.arrow_right),

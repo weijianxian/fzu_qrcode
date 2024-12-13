@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/user_data.dart';
 import '../../utils/dialog_utils.dart';
+import '../../models/theme_data.dart';
 
-class UserPage extends StatefulWidget {
-  const UserPage({super.key, required this.title});
+class SettingPage extends StatefulWidget {
+  const SettingPage({super.key, required this.title});
   final String title;
 
   @override
-  State<UserPage> createState() => _UserPageState();
+  State<SettingPage> createState() => _SettingPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _SettingPageState extends State<SettingPage> {
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -57,6 +58,21 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              DialogUtils.showAlertDialog(context, "关于", "FZUQrCode");
+            },
+            icon: const Icon(Icons.info),
+          ),
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+              Provider.of<ThemeDataNotifier>(context, listen: false)
+                  .toggleTheme();
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -142,7 +158,7 @@ class _UserPageState extends State<UserPage> {
                   child: const Text("登出"),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

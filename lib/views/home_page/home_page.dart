@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../../models/user_data.dart';
-import '../../utils/dialog_utils.dart';
-import '../../models/theme_data.dart';
+
+import 'package:fzu_qrcode/models/user_data.dart';
+import 'package:fzu_qrcode/models/theme_data.dart';
+import 'package:fzu_qrcode/utils/dialog_utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});

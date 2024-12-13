@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../../models/user_data.dart';
-import '../../utils/dialog_utils.dart';
-import '../../models/theme_data.dart';
+
+import 'package:fzu_qrcode/models/user_data.dart';
+import 'package:fzu_qrcode/models/theme_data.dart';
+import 'package:fzu_qrcode/utils/dialog_utils.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, required this.title});

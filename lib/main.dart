@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fzu_qrcode/views/page/library_page.dart';
 import 'package:provider/provider.dart';
-import 'models/theme_data.dart';
-import 'views/page/home_page.dart';
-import 'views/page/setting_page.dart';
-import 'models/user_data.dart';
 import 'package:flutter/services.dart';
+
+import 'models/theme_data.dart';
+import 'models/user_data.dart';
+import 'views/home_page/home_page.dart';
+import 'views/setting_page/setting_page.dart';
+import 'views/library_page/library_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

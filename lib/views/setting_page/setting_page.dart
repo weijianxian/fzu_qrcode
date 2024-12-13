@@ -2,18 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/user_data.dart';
-import '../../utils/dialog_utils.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-class UserPage extends StatefulWidget {
-  const UserPage({super.key, required this.title});
+import 'package:fzu_qrcode/models/user_data.dart';
+import 'package:fzu_qrcode/models/theme_data.dart';
+import 'package:fzu_qrcode/utils/dialog_utils.dart';
+
+class SettingPage extends StatefulWidget {
+  const SettingPage({super.key, required this.title});
   final String title;
 
   @override
-  State<UserPage> createState() => _UserPageState();
+  State<SettingPage> createState() => _SettingPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _SettingPageState extends State<SettingPage> {
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -57,6 +60,21 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              DialogUtils.showAlertDialog(context, "关于", "FZUQrCode");
+            },
+            icon: const Icon(Icons.info),
+          ),
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+              Provider.of<ThemeDataNotifier>(context, listen: false)
+                  .toggleTheme();
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -142,7 +160,26 @@ class _UserPageState extends State<UserPage> {
                   child: const Text("登出"),
                 ),
               ],
-            )
+            ),
+            const Divider(height: 40, thickness: 2),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text("项目地址"),
+              subtitle: const Text("https://github.com/weijianxian/fzu_qrcode"),
+              onTap: () => launchUrlString(
+                  "https://github.com/weijianxian/fzu_qrcode",
+                  mode: LaunchMode.externalApplication),
+              trailing: const Icon(Icons.arrow_right),
+            ),
+            ListTile(
+              leading: const Icon(Icons.bug_report),
+              title: const Text("报告问题"),
+              subtitle: const Text(
+                  "https://github.com/weijianxian/fzu_qrcode/issues"),
+              onTap: () => launchUrlString(
+                  "https://github.com/weijianxian/fzu_qrcode/issues"),
+              trailing: const Icon(Icons.arrow_right),
+            ),
           ],
         ),
       ),

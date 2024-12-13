@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/theme_data.dart';
-import 'views/page/home_page.dart';
-import 'views/page/personal_page.dart';
-import 'models/user_data.dart';
 import 'package:flutter/services.dart';
+
+import 'models/theme_data.dart';
+import 'models/user_data.dart';
+import 'views/home_page/home_page.dart';
+import 'views/setting_page/setting_page.dart';
+import 'views/library_page/library_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static const List<Widget> _pages = <Widget>[
     HomePage(title: "主页"),
-    UserPage(title: "设置"),
+    LibraryPage(title: "图书馆"),
+    SettingPage(title: "设置"),
   ];
 
   void _onItemTapped(int index) {
@@ -85,6 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: '主页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '图书馆',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

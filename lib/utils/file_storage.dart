@@ -10,7 +10,7 @@ class FileStorage {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/user_data.json');
+    return File('$path/config.json');
   }
 
   Future<Map<String, dynamic>> readData() async {

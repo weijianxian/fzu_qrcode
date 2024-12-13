@@ -1,7 +1,7 @@
 name: fzu_qrcode
 description: "因为懒得使用福大一码通小程序，所以写了个app"
 publish_to: "none"
-version: 0.1.1
+version: 0.1.2
 
 environment:
   sdk: ">=3.4.3 <4.0.0"

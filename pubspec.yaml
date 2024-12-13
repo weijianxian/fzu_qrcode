@@ -15,6 +15,7 @@ dependencies:
   dio: ^5.0.0
   cupertino_icons: ^1.0.6
   flutter_launcher_icons: ^0.9.2
+  url_launcher: ^6.0.6
 # 图标
 # flutter pub run flutter_launcher_icons:main
 flutter_icons:

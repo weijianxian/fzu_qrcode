@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../models/user_data.dart';
 import '../../utils/dialog_utils.dart';
 import '../../models/theme_data.dart';
@@ -158,6 +160,25 @@ class _SettingPageState extends State<SettingPage> {
                   child: const Text("登出"),
                 ),
               ],
+            ),
+            const Divider(height: 40, thickness: 2),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text("项目地址"),
+              subtitle: const Text("https://github.com/weijianxian/fzu_qrcode"),
+              onTap: () => launchUrlString(
+                  "https://github.com/weijianxian/fzu_qrcode",
+                  mode: LaunchMode.externalApplication),
+              trailing: const Icon(Icons.arrow_right),
+            ),
+            ListTile(
+              leading: const Icon(Icons.bug_report),
+              title: const Text("报告问题"),
+              subtitle: const Text(
+                  " https://github.com/weijianxian/fzu_qrcode/issues"),
+              onTap: () => launchUrlString(
+                  "https://github.com/weijianxian/fzu_qrcode/issues"),
+              trailing: const Icon(Icons.arrow_right),
             ),
           ],
         ),

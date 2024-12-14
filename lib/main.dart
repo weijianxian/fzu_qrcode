@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: '主页',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.library_books),
             label: '图书馆',
           ),
           BottomNavigationBarItem(

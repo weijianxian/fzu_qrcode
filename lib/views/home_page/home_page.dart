@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:fzu_qrcode/models/user_data.dart';
 import 'package:fzu_qrcode/models/theme_data.dart';
 import 'package:fzu_qrcode/utils/dialog_utils.dart';
+import 'package:fzu_qrcode/utils/parse_color.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
     final userData = Provider.of<UserData>(context, listen: false);
     try {
       await userData.getPayId();
+      await userData.getIdentifyCode();
     } catch (e) {
       if (mounted) {
         DialogUtils.showAlertDialog(
@@ -51,8 +53,9 @@ class _HomePageState extends State<HomePage> {
         body: PageView(
           scrollDirection: Axis.vertical,
           children: [
-            genPage(context, "消费码", userData.payIdList.first.prePayId),
-            genPage(context, "认证码", userData.identifyID.content),
+            genPage("消费码", userData.payIdList.first.prePayId, "black"),
+            genPage(
+                "认证码", userData.identifyID.content, userData.identifyID.color),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -73,7 +76,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  SizedBox genPage(BuildContext context, String codeTitle, String codeData) {
+  SizedBox genPage(
+    String codeTitle,
+    String codeData,
+    String color,
+  ) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -103,6 +110,14 @@ class _HomePageState extends State<HomePage> {
               ),
               child: QrImageView(
                 data: codeData,
+                eyeStyle: QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: parseColor(color),
+                ),
+                dataModuleStyle: QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: parseColor(color),
+                ),
                 backgroundColor: Colors.white,
                 size: MediaQuery.of(context).size.width >=
                         MediaQuery.of(context).size.height

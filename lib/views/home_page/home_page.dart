@@ -48,42 +48,12 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                '消费码',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: QrImageView(
-                  data: userData.payIdList.first.prePayId,
-                  backgroundColor: Colors.white,
-                  size: MediaQuery.of(context).size.width >=
-                          MediaQuery.of(context).size.height
-                      ? MediaQuery.of(context).size.height * 0.4
-                      : MediaQuery.of(context).size.width * 0.7,
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+        body: PageView(
+          scrollDirection: Axis.vertical,
+          children: [
+            genPage(context, "消费码", userData.payIdList.first.prePayId),
+            genPage(context, "认证码", userData.identifyID.content),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _refreshPayId,
@@ -101,5 +71,49 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+  }
+
+  SizedBox genPage(BuildContext context, String codeTitle, String codeData) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              codeTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: QrImageView(
+                data: codeData,
+                backgroundColor: Colors.white,
+                size: MediaQuery.of(context).size.width >=
+                        MediaQuery.of(context).size.height
+                    ? MediaQuery.of(context).size.height * 0.4
+                    : MediaQuery.of(context).size.width * 0.7,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
   }
 }

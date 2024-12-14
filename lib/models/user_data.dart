@@ -2,76 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import '../utils/file_storage.dart';
 
-class PayId {
-  final String devId;
-  final String payAcctId;
-  final String prePayId;
-  final String payPrdCode;
-  final String expiredTime;
-
-  PayId({
-    required this.devId,
-    required this.payAcctId,
-    required this.prePayId,
-    required this.payPrdCode,
-    required this.expiredTime,
-  });
-
-  factory PayId.fromJson(Map<String, dynamic> json) {
-    return PayId(
-      devId: json['devId'],
-      payAcctId: json['payAcctId'],
-      prePayId: json['prePayId'],
-      payPrdCode: json['payPrdCode'],
-      expiredTime: json['expiredTime'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'devId': devId,
-      'payAcctId': payAcctId,
-      'prePayId': prePayId,
-      'payPrdCode': payPrdCode,
-      'expiredTime': expiredTime,
-    };
-  }
-}
-
-class QrCodeResponse {
-  final int code;
-  final String msg;
-  final String requestId;
-  final List<PayId> data;
-
-  QrCodeResponse({
-    required this.code,
-    required this.msg,
-    required this.requestId,
-    required this.data,
-  });
-
-  factory QrCodeResponse.fromJson(Map<String, dynamic> json) {
-    var list = json['data'] as List;
-    List<PayId> payIdList = list.map((i) => PayId.fromJson(i)).toList();
-
-    return QrCodeResponse(
-      code: json['code'],
-      msg: json['msg'],
-      requestId: json['requestId'],
-      data: payIdList,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'code': code,
-      'msg': msg,
-      'requestId': requestId,
-      'data': data.map((payId) => payId.toJson()).toList(),
-    };
-  }
-}
+import 'package:fzu_qrcode/models/pay_id.dart';
+import "package:fzu_qrcode/models/identify_id.dart";
 
 class UserData with ChangeNotifier {
   String _studentId = '';
@@ -81,6 +13,8 @@ class UserData with ChangeNotifier {
   String _deptName = '';
   String _parentDeptName = '';
   List<PayId> _payIdList = [];
+  IdentifyId _identifyId =
+      IdentifyId(color: "green", validTime: 60, content: "");
   final FileStorage _storage = FileStorage();
   final dio = Dio();
 
@@ -96,6 +30,7 @@ class UserData with ChangeNotifier {
   String get parentDeptName => _parentDeptName;
   List<PayId> get payIdList => _payIdList;
   bool get isLoggedIn => _accessToken.isNotEmpty;
+  IdentifyId get identifyID => _identifyId;
 
   void setStudentId(String id) {
     _studentId = id;
@@ -121,6 +56,9 @@ class UserData with ChangeNotifier {
             ?.map((item) => PayId.fromJson(item as Map<String, dynamic>))
             .toList() ??
         [];
+    _identifyId = data['identifyID'] != null
+        ? IdentifyId.fromJson(data['identifyID'])
+        : IdentifyId(color: "green", validTime: 60, content: "");
     notifyListeners();
   }
 
@@ -133,6 +71,7 @@ class UserData with ChangeNotifier {
       'deptName': _deptName,
       'parentDeptName': _parentDeptName,
       'payIdList': _payIdList.map((payId) => payId.toJson()).toList(),
+      'identifyID': _identifyId.toJson()
     };
     await _storage.writeData(data);
   }
@@ -218,6 +157,44 @@ class UserData with ChangeNotifier {
     }
   }
 
+  Future<void> getIdentifyCode() async {
+    if (!isLoggedIn) {
+      return;
+    }
+
+    try {
+      final response = await dio.get(
+        'https://oss.fzu.edu.cn/api/qr/device/getQrCode',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_accessToken',
+          },
+          contentType: Headers.jsonContentType,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('无法获得身份认证ID: ${response.statusMessage}');
+      }
+
+      final responseData = response.data;
+      switch (responseData['msg']) {
+        case '请求成功':
+          _identifyId = IdentifyResponse.fromJson(responseData).data;
+          notifyListeners();
+          _saveData();
+          break;
+        default:
+          throw Exception("无法获得身份认证id: \n$responseData");
+      }
+    } catch (e) {
+      throw Exception('获取身份认证ID时发生错误: \n$e');
+    }
+  }
+
   Future<void> logout() async {
     _studentId = "";
     _password = "";
@@ -226,6 +203,7 @@ class UserData with ChangeNotifier {
     _deptName = "";
     _parentDeptName = "";
     _payIdList.clear();
+    _identifyId = IdentifyId(color: "green", validTime: 60, content: "");
     notifyListeners();
     await _storage.deleteData();
   }

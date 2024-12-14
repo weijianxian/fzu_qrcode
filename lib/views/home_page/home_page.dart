@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
     final userData = Provider.of<UserData>(context, listen: false);
     try {
       await userData.getPayId();
+      await userData.getIdentifyCode();
     } catch (e) {
       if (mounted) {
         DialogUtils.showAlertDialog(

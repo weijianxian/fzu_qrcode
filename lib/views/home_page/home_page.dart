@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> _refreshPayId() async {
+  Future<void> _refresh() async {
     final userData = Provider.of<UserData>(context, listen: false);
     try {
       await userData.getPayId();
@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
     final userData = Provider.of<UserData>(context);
     bool isLandscape =
         MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
-    if (userData.payIdList.isEmpty) {
-      _refreshPayId();
+    if (userData.payIdList.isEmpty || userData.identifyID.content.isEmpty) {
+      _refresh();
     }
     if (userData.isLoggedIn && userData.payIdList.isNotEmpty) {
       return Scaffold(
@@ -56,9 +56,15 @@ class _HomePageState extends State<HomePage> {
             ? SingleChildScrollView(
                 child: Row(
                   children: [
-                    genPage("消费码", userData.payIdList.first.prePayId, "black"),
-                    genPage("认证码", userData.identifyID.content,
-                        userData.identifyID.color),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: genPage(
+                            "消费码", userData.payIdList.first.prePayId, "black")),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: genPage("认证码", userData.identifyID.content,
+                          userData.identifyID.color),
+                    ),
                   ],
                 ),
               )
@@ -71,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
         floatingActionButton: FloatingActionButton(
-          onPressed: _refreshPayId,
+          onPressed: _refresh,
           child: const Icon(Icons.refresh),
         ),
       );

@@ -32,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
+    bool isLandscape =
+        MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
     if (userData.payIdList.isEmpty) {
       _refreshPayId();
     }
@@ -50,14 +52,22 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: PageView(
-          scrollDirection: Axis.vertical,
-          children: [
-            genPage("消费码", userData.payIdList.first.prePayId, "black"),
-            genPage(
-                "认证码", userData.identifyID.content, userData.identifyID.color),
-          ],
-        ),
+        body: isLandscape
+            ? Row(
+                children: [
+                  genPage("消费码", userData.payIdList.first.prePayId, "black"),
+                  genPage("认证码", userData.identifyID.content,
+                      userData.identifyID.color),
+                ],
+              )
+            : PageView(
+                scrollDirection: Axis.vertical,
+                children: [
+                  genPage("消费码", userData.payIdList.first.prePayId, "black"),
+                  genPage("认证码", userData.identifyID.content,
+                      userData.identifyID.color),
+                ],
+              ),
         floatingActionButton: FloatingActionButton(
           onPressed: _refreshPayId,
           child: const Icon(Icons.refresh),
@@ -81,8 +91,12 @@ class _HomePageState extends State<HomePage> {
     String codeData,
     String color,
   ) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    bool isLandscape = screenWidth >= screenHeight;
+
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
+      width: isLandscape ? screenWidth * 0.5 : screenWidth,
       height: MediaQuery.of(context).size.height,
       child: Center(
         child: Column(
@@ -119,10 +133,7 @@ class _HomePageState extends State<HomePage> {
                   color: parseColor(color),
                 ),
                 backgroundColor: Colors.white,
-                size: MediaQuery.of(context).size.width >=
-                        MediaQuery.of(context).size.height
-                    ? MediaQuery.of(context).size.height * 0.4
-                    : MediaQuery.of(context).size.width * 0.7,
+                size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
               ),
             ),
             const SizedBox(height: 20),

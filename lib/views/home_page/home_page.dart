@@ -53,12 +53,14 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: isLandscape
-            ? Row(
-                children: [
-                  genPage("消费码", userData.payIdList.first.prePayId, "black"),
-                  genPage("认证码", userData.identifyID.content,
-                      userData.identifyID.color),
-                ],
+            ? SingleChildScrollView(
+                child: Row(
+                  children: [
+                    genPage("消费码", userData.payIdList.first.prePayId, "black"),
+                    genPage("认证码", userData.identifyID.content,
+                        userData.identifyID.color),
+                  ],
+                ),
               )
             : PageView(
                 scrollDirection: Axis.vertical,
@@ -86,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  SizedBox genPage(
+  Widget genPage(
     String codeTitle,
     String codeData,
     String color,
@@ -95,50 +97,46 @@ class _HomePageState extends State<HomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isLandscape = screenWidth >= screenHeight;
 
-    return SizedBox(
-      width: isLandscape ? screenWidth * 0.5 : screenWidth,
-      height: MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              codeTitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: QrImageView(
-                data: codeData,
-                eyeStyle: QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: parseColor(color),
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            codeTitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
                 ),
-                dataModuleStyle: QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.square,
-                  color: parseColor(color),
-                ),
-                backgroundColor: Colors.white,
-                size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
-              ),
+              ],
             ),
-            const SizedBox(height: 20),
-          ],
-        ),
+            child: QrImageView(
+              data: codeData,
+              eyeStyle: QrEyeStyle(
+                eyeShape: QrEyeShape.square,
+                color: parseColor(color),
+              ),
+              dataModuleStyle: QrDataModuleStyle(
+                dataModuleShape: QrDataModuleShape.square,
+                color: parseColor(color),
+              ),
+              backgroundColor: Colors.white,
+              size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

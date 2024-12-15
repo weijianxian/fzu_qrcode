@@ -32,8 +32,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
-    bool isLandscape =
-        MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
     if (userData.payIdList.isEmpty) {
       _refreshPayId();
     }
@@ -52,24 +50,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: isLandscape
-            ? SingleChildScrollView(
-                child: Row(
-                  children: [
-                    genPage("消费码", userData.payIdList.first.prePayId, "black"),
-                    genPage("认证码", userData.identifyID.content,
-                        userData.identifyID.color),
-                  ],
-                ),
-              )
-            : PageView(
-                scrollDirection: Axis.vertical,
-                children: [
-                  genPage("消费码", userData.payIdList.first.prePayId, "black"),
-                  genPage("认证码", userData.identifyID.content,
-                      userData.identifyID.color),
-                ],
-              ),
+        body: PageView(
+          scrollDirection: Axis.vertical,
+          children: [
+            genPage("消费码", userData.payIdList.first.prePayId, "black"),
+            genPage(
+                "认证码", userData.identifyID.content, userData.identifyID.color),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: _refreshPayId,
           child: const Icon(Icons.refresh),
@@ -88,55 +76,58 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget genPage(
+  SizedBox genPage(
     String codeTitle,
     String codeData,
     String color,
   ) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    bool isLandscape = screenWidth >= screenHeight;
-
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            codeTitle,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              codeTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: QrImageView(
+                data: codeData,
+                eyeStyle: QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: parseColor(color),
                 ),
-              ],
-            ),
-            child: QrImageView(
-              data: codeData,
-              eyeStyle: QrEyeStyle(
-                eyeShape: QrEyeShape.square,
-                color: parseColor(color),
+                dataModuleStyle: QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: parseColor(color),
+                ),
+                backgroundColor: Colors.white,
+                size: MediaQuery.of(context).size.width >=
+                        MediaQuery.of(context).size.height
+                    ? MediaQuery.of(context).size.height * 0.4
+                    : MediaQuery.of(context).size.width * 0.7,
               ),
-              dataModuleStyle: QrDataModuleStyle(
-                dataModuleShape: QrDataModuleShape.square,
-                color: parseColor(color),
-              ),
-              backgroundColor: Colors.white,
-              size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
             ),
-          ),
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

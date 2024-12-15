@@ -16,10 +16,10 @@
 
 ```sh
 $ flutter --version
-Flutter 3.24.5 • channel stable • https://github.com/flutter/flutter.git
-Framework • revision dec2ee5c1f  • 2024-11-13 11:13:06 -0800
-Engine • revision a18df97ca5
-Tools • Dart 3.5.4 • DevTools 2.37.3
+Flutter 3.27.0 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision 8495dee1fd • 2024-12-10 14:23:39 -0800
+Engine • revision 83bacfc525
+Tools • Dart 3.6.0 • DevTools 2.40.2
 ```
 
 1. 确保你已经安装了 Flutter SDK，并且配置了 Flutter 环境。

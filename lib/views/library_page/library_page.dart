@@ -50,7 +50,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withAlpha((0.5 * 255).toInt()),
                       spreadRadius: 5,
                       blurRadius: 7,
                       offset: const Offset(0, 3),

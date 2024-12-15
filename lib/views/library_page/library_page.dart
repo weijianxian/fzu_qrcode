@@ -18,6 +18,10 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    bool isLandscape = screenWidth >= screenHeight;
+
     if (userData.isLoggedIn && userData.payIdList.isNotEmpty) {
       return Scaffold(
         appBar: AppBar(
@@ -33,42 +37,48 @@ class _LibraryPageState extends State<LibraryPage> {
             ),
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                '图书馆电子证件',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
+        body: PageView(
+          scrollDirection: Axis.vertical,
+          children: [
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Text(
+                      "图书馆电子证件",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: QrImageView(
+                        data: userData.studentId,
+                        backgroundColor: Colors.white,
+                        size: isLandscape
+                            ? screenHeight * 0.45
+                            : screenWidth * 0.8,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                child: QrImageView(
-                  data: userData.studentId,
-                  backgroundColor: Colors.white,
-                  size: MediaQuery.of(context).size.width >=
-                          MediaQuery.of(context).size.height
-                      ? MediaQuery.of(context).size.height * 0.4
-                      : MediaQuery.of(context).size.width * 0.7,
-                ),
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     } else {

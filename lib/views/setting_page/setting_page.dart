@@ -78,109 +78,113 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '欢迎, ${userData.name}',
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _studentIdController,
-              decoration: const InputDecoration(
-                labelText: '学号',
-                border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '欢迎, ${userData.name}',
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              onChanged: (value) {
-                userData.setStudentId(value);
-              },
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: '密码',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _studentIdController,
+                decoration: const InputDecoration(
+                  labelText: '学号',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  userData.setStudentId(value);
+                },
               ),
-              obscureText: true,
-              onChanged: (value) {
-                userData.setPassword(value);
-              },
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    userData.setStudentId(_studentIdController.text);
-                    userData.setPassword(_passwordController.text);
-                    if (userData.studentId.isEmpty ||
-                        userData.password.isEmpty) {
-                      DialogUtils.showAlertDialog(context, '错误', '学号和密码不能为空');
-                      return;
-                    }
-                    _showLoadingDialog(context);
-                    final currentContext = context;
-                    try {
-                      bool success = await userData.loginAndSaveToken();
-                      if (success) {
-                        await userData.getPayId();
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: '密码',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                onChanged: (value) {
+                  userData.setPassword(value);
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      userData.setStudentId(_studentIdController.text);
+                      userData.setPassword(_passwordController.text);
+                      if (userData.studentId.isEmpty ||
+                          userData.password.isEmpty) {
+                        DialogUtils.showAlertDialog(context, '错误', '学号和密码不能为空');
+                        return;
+                      }
+                      _showLoadingDialog(context);
+                      final currentContext = context;
+                      try {
+                        bool success = await userData.loginAndSaveToken();
+                        if (success) {
+                          await userData.getPayId();
+                          if (mounted) {
+                            _hideLoadingDialog(currentContext);
+                            DialogUtils.showAlertDialog(
+                                currentContext, '成功', '登录成功');
+                          }
+                        } else {
+                          if (mounted) {
+                            _hideLoadingDialog(currentContext);
+                            DialogUtils.showAlertDialog(
+                                currentContext, '错误', '登录失败');
+                          }
+                        }
+                      } catch (e) {
                         if (mounted) {
                           _hideLoadingDialog(currentContext);
-                          DialogUtils.showAlertDialog(
-                              currentContext, '成功', '登录成功');
-                        }
-                      } else {
-                        if (mounted) {
-                          _hideLoadingDialog(currentContext);
-                          DialogUtils.showAlertDialog(
-                              currentContext, '错误', '登录失败');
+                          DialogUtils.showAlertDialog(currentContext, '错误',
+                              '发生错误：\n${e.toString()}\n请重试或联系管理员');
                         }
                       }
-                    } catch (e) {
-                      if (mounted) {
-                        _hideLoadingDialog(currentContext);
-                        DialogUtils.showAlertDialog(currentContext, '错误',
-                            '发生错误：\n${e.toString()}\n请重试或联系管理员');
-                      }
-                    }
-                  },
-                  child: const Text("登录"),
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    userData.logout();
-                    _studentIdController.text = '';
-                    _passwordController.text = '';
-                  },
-                  child: const Text("登出"),
-                ),
-              ],
-            ),
-            const Divider(height: 40, thickness: 2),
-            ListTile(
-              leading: const Icon(Icons.code),
-              title: const Text("项目地址"),
-              subtitle: const Text("https://github.com/weijianxian/fzu_qrcode"),
-              onTap: () => launchUrlString(
-                  "https://github.com/weijianxian/fzu_qrcode",
-                  mode: LaunchMode.externalApplication),
-              trailing: const Icon(Icons.arrow_right),
-            ),
-            ListTile(
-              leading: const Icon(Icons.bug_report),
-              title: const Text("报告问题"),
-              subtitle: const Text(
-                  "https://github.com/weijianxian/fzu_qrcode/issues"),
-              onTap: () => launchUrlString(
-                  "https://github.com/weijianxian/fzu_qrcode/issues"),
-              trailing: const Icon(Icons.arrow_right),
-            ),
-          ],
+                    },
+                    child: const Text("登录"),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      userData.logout();
+                      _studentIdController.text = '';
+                      _passwordController.text = '';
+                    },
+                    child: const Text("登出"),
+                  ),
+                ],
+              ),
+              const Divider(height: 40, thickness: 2),
+              ListTile(
+                leading: const Icon(Icons.code),
+                title: const Text("项目地址"),
+                subtitle:
+                    const Text("https://github.com/weijianxian/fzu_qrcode"),
+                onTap: () => launchUrlString(
+                    "https://github.com/weijianxian/fzu_qrcode",
+                    mode: LaunchMode.externalApplication),
+                trailing: const Icon(Icons.arrow_right),
+              ),
+              ListTile(
+                leading: const Icon(Icons.bug_report),
+                title: const Text("报告问题"),
+                subtitle: const Text(
+                    "https://github.com/weijianxian/fzu_qrcode/issues"),
+                onTap: () => launchUrlString(
+                    "https://github.com/weijianxian/fzu_qrcode/issues"),
+                trailing: const Icon(Icons.arrow_right),
+              ),
+            ],
+          ),
         ),
       ),
     );

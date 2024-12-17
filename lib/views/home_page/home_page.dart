@@ -53,19 +53,19 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: isLandscape
-            ? SingleChildScrollView(
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: genPage(
-                            "消费码", userData.payIdList.first.prePayId, "black")),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: genPage("认证码", userData.identifyID.content,
-                          userData.identifyID.color),
-                    ),
-                  ],
+            ? Center(
+                child: SingleChildScrollView(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: genPage("消费码",
+                              userData.payIdList.first.prePayId, "black")),
+                      Expanded(
+                        child: genPage("认证码", userData.identifyID.content,
+                            userData.identifyID.color),
+                      ),
+                    ],
+                  ),
                 ),
               )
             : PageView(
@@ -103,47 +103,45 @@ class _HomePageState extends State<HomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isLandscape = screenWidth >= screenHeight;
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            codeTitle,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withAlpha((0.5 * 255).toInt()),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: QrImageView(
-              data: codeData,
-              eyeStyle: QrEyeStyle(
-                eyeShape: QrEyeShape.square,
-                color: parseColor(color),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          codeTitle,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 20),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withAlpha((0.5 * 255).toInt()),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3),
               ),
-              dataModuleStyle: QrDataModuleStyle(
-                dataModuleShape: QrDataModuleShape.square,
-                color: parseColor(color),
-              ),
-              backgroundColor: Colors.white,
-              size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
-            ),
+            ],
           ),
-          const SizedBox(height: 20),
-        ],
-      ),
+          child: QrImageView(
+            data: codeData,
+            eyeStyle: QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: parseColor(color),
+            ),
+            dataModuleStyle: QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: parseColor(color),
+            ),
+            backgroundColor: Colors.white,
+            size: isLandscape ? screenHeight * 0.45 : screenWidth * 0.8,
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }

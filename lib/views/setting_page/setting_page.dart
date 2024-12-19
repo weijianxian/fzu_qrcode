@@ -127,26 +127,18 @@ class _SettingPageState extends State<SettingPage> {
                       _showLoadingDialog(context);
                       final currentContext = context;
                       try {
-                        bool success = await userData.loginAndSaveToken();
-                        if (success) {
-                          await userData.getPayId();
-                          if (mounted) {
-                            _hideLoadingDialog(currentContext);
-                            DialogUtils.showAlertDialog(
-                                currentContext, '成功', '登录成功');
-                          }
-                        } else {
-                          if (mounted) {
-                            _hideLoadingDialog(currentContext);
-                            DialogUtils.showAlertDialog(
-                                currentContext, '错误', '登录失败');
-                          }
+                        await userData.loginAndSaveToken();
+                        await userData.getPayId();
+                        if (mounted) {
+                          _hideLoadingDialog(currentContext);
+                          DialogUtils.showAlertDialog(
+                              currentContext, '成功', '登录成功');
                         }
                       } catch (e) {
                         if (mounted) {
                           _hideLoadingDialog(currentContext);
-                          DialogUtils.showAlertDialog(currentContext, '错误',
-                              '发生错误：\n${e.toString()}\n请重试或联系管理员');
+                          DialogUtils.showAlertDialog(
+                              currentContext, '错误', '错误信息如下：\n${e.toString()}');
                         }
                       }
                     },

@@ -77,43 +77,35 @@ class UserData with ChangeNotifier {
   }
 
   Future<bool> loginAndSaveToken() async {
-    try {
-      final response = await dio.post(
-        'https://oss.fzu.edu.cn/api/qr/login/getAccessToken',
-        data: {
-          'isNotPermanent': true,
-          'username': studentId,
-          'password': password,
+    final response = await dio.post(
+      'https://oss.fzu.edu.cn/api/qr/login/getAccessToken',
+      data: {
+        'isNotPermanent': true,
+        'username': studentId,
+        'password': password,
+      },
+      options: Options(
+        contentType: Headers.jsonContentType,
+        validateStatus: (status) {
+          return status! < 500;
         },
-        options: Options(
-          contentType: Headers.jsonContentType,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ),
-      );
+      ),
+    );
 
-      if (response.statusCode != 200) {
-        throw Exception("在登录时发生异常: \n$response");
-      }
-
-      final responseData = response.data;
-      switch (responseData['msg']) {
-        case '请求成功':
-          _accessToken = responseData['data']['access_token'];
-          _name = responseData['data']['name'];
-          _deptName = responseData['data']['deptName'];
-          _parentDeptName = responseData['data']['parentDeptName'];
-          notifyListeners();
-          _saveData();
-          return true;
-        case '账号密码错误':
-          throw Exception("账号或密码错误，请检查");
-        default:
-          throw Exception("无法成功登录: \n$responseData");
-      }
-    } catch (e) {
-      throw Exception('登录时发生错误: \n$e');
+    final responseData = response.data;
+    switch (responseData['msg']) {
+      case '请求成功':
+        _accessToken = responseData['data']['access_token'];
+        _name = responseData['data']['name'];
+        _deptName = responseData['data']['deptName'];
+        _parentDeptName = responseData['data']['parentDeptName'];
+        notifyListeners();
+        _saveData();
+        return true;
+      case '账号密码错误':
+        throw Exception("账号或密码错误，请检查");
+      default:
+        throw Exception("无法成功登录: \n$responseData");
     }
   }
 
@@ -122,38 +114,34 @@ class UserData with ChangeNotifier {
       return;
     }
 
-    try {
-      final response = await dio.post(
-        'https://oss.fzu.edu.cn/api/qr/deal/getQrCode',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $_accessToken',
-          },
-          contentType: Headers.jsonContentType,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ),
-      );
+    final response = await dio.post(
+      'https://oss.fzu.edu.cn/api/qr/deal/getQrCode',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $_accessToken',
+        },
+        contentType: Headers.jsonContentType,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
 
-      if (response.statusCode != 200) {
-        throw Exception('无法获得PayID: ${response.statusMessage}');
-      }
+    if (response.statusCode != 200) {
+      throw Exception('无法获得PayID: ${response.statusMessage}');
+    }
 
-      final responseData = response.data;
-      switch (responseData['msg']) {
-        case '请求成功':
-          _payIdList = (responseData['data'] as List)
-              .map((item) => PayId.fromJson(item as Map<String, dynamic>))
-              .toList();
-          notifyListeners();
-          _saveData();
-          break;
-        default:
-          throw Exception("无法获得payid: \n$responseData");
-      }
-    } catch (e) {
-      throw Exception('获取PayID时发生错误: \n$e');
+    final responseData = response.data;
+    switch (responseData['msg']) {
+      case '请求成功':
+        _payIdList = (responseData['data'] as List)
+            .map((item) => PayId.fromJson(item as Map<String, dynamic>))
+            .toList();
+        notifyListeners();
+        _saveData();
+        break;
+      default:
+        throw Exception("无法获得payid: \n$responseData");
     }
   }
 
@@ -162,36 +150,32 @@ class UserData with ChangeNotifier {
       return;
     }
 
-    try {
-      final response = await dio.get(
-        'https://oss.fzu.edu.cn/api/qr/device/getQrCode',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $_accessToken',
-          },
-          contentType: Headers.jsonContentType,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ),
-      );
+    final response = await dio.get(
+      'https://oss.fzu.edu.cn/api/qr/device/getQrCode',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $_accessToken',
+        },
+        contentType: Headers.jsonContentType,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
 
-      if (response.statusCode != 200) {
-        throw Exception('无法获得身份认证ID: ${response.statusMessage}');
-      }
+    if (response.statusCode != 200) {
+      throw Exception('无法获得身份认证ID: ${response.statusMessage}');
+    }
 
-      final responseData = response.data;
-      switch (responseData['msg']) {
-        case '请求成功':
-          _identifyId = IdentifyResponse.fromJson(responseData).data;
-          notifyListeners();
-          _saveData();
-          break;
-        default:
-          throw Exception("无法获得身份认证id: \n$responseData");
-      }
-    } catch (e) {
-      throw Exception('获取身份认证ID时发生错误: \n$e');
+    final responseData = response.data;
+    switch (responseData['msg']) {
+      case '请求成功':
+        _identifyId = IdentifyResponse.fromJson(responseData).data;
+        notifyListeners();
+        _saveData();
+        break;
+      default:
+        throw Exception("无法获得身份认证id: \n$responseData");
     }
   }
 

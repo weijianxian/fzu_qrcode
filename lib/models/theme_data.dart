@@ -13,11 +13,11 @@ class ThemeDataNotifier with ChangeNotifier {
         ),
         brightness: Brightness.light,
         appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent, // 去除状态栏遮罩
-            statusBarIconBrightness: Brightness.dark, // 状态栏图标字体颜色
-          ),
-        ),
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent, // 去除状态栏遮罩
+              statusBarIconBrightness: Brightness.dark, // 状态栏图标字体颜色
+            ),
+            foregroundColor: Colors.white),
         primarySwatch: Colors.blue,
         fontFamily: "JetBrainsMono", // 设置全局字体
         splashFactory: NoSplash.splashFactory, // 禁用水波纹效果
@@ -29,11 +29,11 @@ class ThemeDataNotifier with ChangeNotifier {
           brightness: Brightness.dark,
         ),
         appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent, // 去除状态栏遮罩
-            statusBarIconBrightness: Brightness.light, // 状态栏图标字体颜色
-          ),
-        ),
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent, // 去除状态栏遮罩
+              statusBarIconBrightness: Brightness.light, // 状态栏图标字体颜色
+            ),
+            foregroundColor: Colors.black),
         primarySwatch: Colors.blue,
         fontFamily: "JetBrainsMono", // 设置全局字体
         splashFactory: NoSplash.splashFactory, // 禁用水波纹效果

@@ -28,30 +28,6 @@ class _SettingPageState extends State<SettingPage> {
     _passwordController.text = userData.password;
   }
 
-  void _showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          content: Row(
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text('加载中...'),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _hideLoadingDialog(BuildContext context) {
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
@@ -124,19 +100,22 @@ class _SettingPageState extends State<SettingPage> {
                         DialogUtils.showAlertDialog(context, '错误', '学号和密码不能为空');
                         return;
                       }
-                      _showLoadingDialog(context);
+                      DialogUtils.showLoadingDialog(context); // 显示加载对话框
                       final currentContext = context;
                       try {
                         await userData.loginAndSaveToken();
                         await userData.getPayId();
                         if (mounted) {
-                          _hideLoadingDialog(currentContext);
-                          DialogUtils.showAlertDialog(
+                          Navigator.of(context).pop();
+
+                          DialogUtils.showTipsDialog(
                               currentContext, '成功', '登录成功');
                         }
+                        FocusScope.of(context).unfocus(); // 隐藏键盘
                       } catch (e) {
                         if (mounted) {
-                          _hideLoadingDialog(currentContext);
+                          Navigator.of(context).pop();
+
                           DialogUtils.showAlertDialog(
                               currentContext, '错误', '错误信息如下：\n${e.toString()}');
                         }

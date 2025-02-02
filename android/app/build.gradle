@@ -9,7 +9,6 @@ android {
     namespace = "com.wei.fzu_qrcode"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -34,6 +33,7 @@ android {
             keyPassword System.getenv("KEY_PASSWORD")
             storeFile file(System.getenv("KEYSTORE_PATH"))
             storePassword System.getenv("KEYSTORE_PASSWORD")
+            
         }
         release {
             keyAlias System.getenv("KEY_ALIAS")
@@ -42,12 +42,14 @@ android {
             storePassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
-    buildTypes {
+
+     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release
+            applicationIdSuffix ".dev" 
         }
     }
 }

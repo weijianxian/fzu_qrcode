@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {

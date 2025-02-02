@@ -46,21 +46,9 @@ jobs:
           export KEYSTORE_PATH=keystore.jks
           flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi
 
-      # 上传 armeabi-v7a APK
-      - name: Upload armeabi-v7a APK
+      # 上传 APKs
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: app-armeabi-v7a-release.apk
-          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-      # 上传 arm64-v8a APK
-      - name: Upload arm64-v8a APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-arm64-v8a-release.apk
-          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-      # 上传 x86_64 APK
-      - name: Upload x86_64 APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-x86_64-release.apk
-          path: build/app/outputs/flutter-apk/app-x86_64-release.apk
+          name: apks
+          path: build/app/outputs/flutter-apk/*.apk

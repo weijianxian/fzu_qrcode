@@ -17,19 +17,32 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  late final FocusNode studentIdFocusNode;
+  late final FocusNode passwordFocusNode;
+
   @override
   void initState() {
     super.initState();
     final userData = Provider.of<UserData>(context, listen: false);
     _studentIdController.text = userData.studentId;
     _passwordController.text = userData.password;
+    studentIdFocusNode = FocusNode();
+    passwordFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    studentIdFocusNode.dispose();
+    passwordFocusNode.dispose();
+    _studentIdController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
-    final studentIdFocusNode = FocusNode();
-    final passwordFocusNode = FocusNode();
+
     return Column(
       children: [
         TextField(
@@ -38,9 +51,6 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
             labelText: '学号',
             border: OutlineInputBorder(),
           ),
-          onChanged: (value) {
-            userData.setStudentId(value);
-          },
           focusNode: studentIdFocusNode,
         ),
         const SizedBox(height: 20),
@@ -51,9 +61,6 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
             border: OutlineInputBorder(),
           ),
           obscureText: true,
-          onChanged: (value) {
-            userData.setPassword(value);
-          },
           focusNode: passwordFocusNode,
         ),
         const SizedBox(height: 10),

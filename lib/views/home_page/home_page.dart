@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       if (mounted) {
         DialogUtils.showAlertDialog(
-            context, "Error", "发生错误：\n${e.toString()}\n请重试或联系管理员");
+            context, "Error", "发生错误：\n${e.toString()}\n请重试");
       }
     }
   }
@@ -32,8 +32,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
-    bool isLandscape =
-        MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
     if (userData.payIdList.isEmpty || userData.identifyID.content.isEmpty) {
       _refresh();
     }
@@ -52,30 +50,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: isLandscape
-            ? Center(
-                child: SingleChildScrollView(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: genPage("消费码",
-                              userData.payIdList.first.prePayId, "black")),
-                      Expanded(
-                        child: genPage("认证码", userData.identifyID.content,
-                            userData.identifyID.color),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : PageView(
-                scrollDirection: Axis.vertical,
-                children: [
-                  genPage("消费码", userData.payIdList.first.prePayId, "black"),
-                  genPage("认证码", userData.identifyID.content,
-                      userData.identifyID.color),
-                ],
-              ),
+        body: PageView(
+          scrollDirection: Axis.vertical,
+          children: [
+            genPage("消费码", userData.payIdList.first.prePayId, "black"),
+            genPage(
+                "认证码", userData.identifyID.content, userData.identifyID.color),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: _refresh,
           child: const Icon(Icons.refresh),

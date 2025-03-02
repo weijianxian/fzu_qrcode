@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class InfoWidget extends StatelessWidget {
+  const InfoWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(

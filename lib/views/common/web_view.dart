@@ -54,7 +54,7 @@ class _WebViewState extends State<WebView> {
         title: Text(_pageTitle),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Expanded(child: WebViewWidget(controller: _controller)),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

@@ -35,8 +35,10 @@ export KEY_PASSWORD=your_key_password
 flutter build apk --release
 ```
 
-3. 2. build exe
+3. 2. build apk
 
 ```sh
-flutter build windows --release
+flutter build apk
 ```
+
+![](https://count.getloli.com/@wei-fzuqrcode)

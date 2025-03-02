@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       if (mounted) {
         DialogUtils.showAlertDialog(
-            context, "Error", "发生错误：\n${e.toString()}\n请重试");
+            context, const Text("Error"), [Text(e.toString())]);
       }
     }
   }

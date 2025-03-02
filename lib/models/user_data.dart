@@ -5,6 +5,11 @@ import '../utils/file_storage.dart';
 import 'package:fzu_qrcode/models/pay_id.dart';
 import "package:fzu_qrcode/models/identify_id.dart";
 
+const ymtLoginUrl ='https://oss.fzu.edu.cn/api/qr/login/getAccessToken';
+const getPayCodeUrl = 'https://oss.fzu.edu.cn/api/qr/deal/getQrCode';
+const getIdentifyCodeUrl = 'https://oss.fzu.edu.cn/api/qr/device/getQrCode';
+
+
 class UserData with ChangeNotifier {
   String _studentId = '';
   String _password = '';
@@ -77,8 +82,12 @@ class UserData with ChangeNotifier {
   }
 
   Future<bool> loginAndSaveToken() async {
+    if (_studentId.isEmpty || _password.isEmpty) {
+      throw Exception("学号或密码为空");
+    }
+
     final response = await dio.post(
-      'https://oss.fzu.edu.cn/api/qr/login/getAccessToken',
+      ymtLoginUrl,
       data: {
         'isNotPermanent': true,
         'username': studentId,
@@ -115,7 +124,7 @@ class UserData with ChangeNotifier {
     }
 
     final response = await dio.post(
-      'https://oss.fzu.edu.cn/api/qr/deal/getQrCode',
+      getPayCodeUrl,
       options: Options(
         headers: {
           'Authorization': 'Bearer $_accessToken',
@@ -151,7 +160,7 @@ class UserData with ChangeNotifier {
     }
 
     final response = await dio.get(
-      'https://oss.fzu.edu.cn/api/qr/device/getQrCode',
+      getIdentifyCodeUrl,
       options: Options(
         headers: {
           'Authorization': 'Bearer $_accessToken',

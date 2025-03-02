@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 
 class DialogUtils {
   static Future<void> showAlertDialog(
-      BuildContext context, String title, String content) async {
+      BuildContext context, Widget title, List<Widget> children) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // 用户必须点击按钮才能关闭弹窗
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
+          title: title,
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
-                Text(content),
-              ],
+              children: children,
             ),
           ),
           actions: <Widget>[
@@ -29,19 +27,17 @@ class DialogUtils {
     );
   }
 
-  static Future<void> showConfirmationDialog(BuildContext context, String title,
-      String content, VoidCallback onConfirm) async {
+  static Future<void> showConfirmationDialog(BuildContext context, Widget title,
+      List<Widget> children, VoidCallback onConfirm) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // 用户必须点击按钮才能关闭弹窗
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
+          title: title,
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
-                Text(content),
-              ],
+              children:children,
             ),
           ),
           actions: <Widget>[

@@ -1,7 +1,7 @@
 name: fzu_qrcode
 description: "因为懒得使用福大一码通小程序，所以写了个app"
 publish_to: "none"
-version: 1.0.1+6
+version: 1.1.0+7
 
 environment:
   sdk: ">=3.4.3 <4.0.0"
@@ -15,11 +15,12 @@ dependencies:
   dio: ^5.0.0
   cupertino_icons: ^1.0.6
   url_launcher: ^6.0.6
-
+  webview_flutter: ^4.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
 # flutter资源文件
 flutter:
   uses-material-design: true

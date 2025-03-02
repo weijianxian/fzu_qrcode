@@ -69,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
               const SizedBox(height: 20),
               const LoginYMTwigit(),
               const Divider(height: 40, thickness: 2),
-              InfoWidget(),
+              const InfoWidget(),
             ],
           ),
         ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-
+import "views/toolbox_page/tool_box.dart";
 import 'models/theme_data.dart';
 import 'models/user_data.dart';
 import 'views/home_page/home_page.dart';
 import 'views/setting_page/setting_page.dart';
 import 'views/library_page/library_page.dart';
-
+import 'views/common/web_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -38,6 +38,12 @@ class MyApp extends StatelessWidget {
       title: 'FZUQrCode',
       theme: Provider.of<ThemeDataNotifier>(context).themeData,
       home: const MyHomePage(title: 'FZUQrCode'),
+      routes: {
+        "/webview": (context) {  // 跳转到webview页面
+          final args = ModalRoute.of(context)?.settings.arguments as String?;
+          return WebView(url: args ?? '');
+        },
+      },
     );
   }
 }
@@ -56,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static const List<Widget> _pages = <Widget>[
     HomePage(title: "主页"),
+    ToolBoxPage(title: "工具箱"),
     LibraryPage(title: "图书馆"),
     SettingPage(title: "设置"),
   ];
@@ -85,10 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: '主页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: '工具箱',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),

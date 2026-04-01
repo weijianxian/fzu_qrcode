@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://socialify.git.ci/weijianxian/fzu_qrcode/image?description=1&descriptionEditable=%E5%9B%A0%E4%B8%BA%E6%87%92%E5%BE%97%E4%BD%BF%E7%94%A8%E8%8E%8E%E5%AE%9D%E5%B0%8F%E7%A8%8B%E5%BA%8F%EF%BC%8C%E6%89%80%E4%BB%A5%E6%88%91%E5%86%99%E4%BA%86%E4%B8%AAAPP&font=Jost&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F33548986%3Fv%3D4%26size%3D256&name=1&owner=1&pattern=Diagonal%20Stripes&pulls=1&stargazers=1&theme=Light" alt="fzu_qrcode" width="640" height="320" />
+<img src="https://socialify.git.ci/weijianxian/fzu_qrcode/image?description=1&descriptionEditable=%E5%9B%A0%E4%B8%BA%E6%87%92%E5%BE%97%E4%BD%BF%E7%94%A8%E8%8E%8E%E5%AE%9D%E7%A6%8F%E5%A4%A7%E4%B8%80%E7%A0%81%E9%80%9A%E5%B0%8F%E7%A8%8B%E5%BA%8F%EF%BC%8C%E6%89%80%E4%BB%A5%E6%88%91%E5%86%99%E4%BA%86%E4%B8%AAAPP&font=Jost&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F33548986%3Fv%3D4%26size%3D256&name=1&owner=1&pattern=Diagonal%20Stripes&pulls=1&stargazers=1&theme=Light" alt="fzu_qrcode" width="640" height="320" />
 </p>
 
 <h1 align="center">fzu_qrcode</h1>

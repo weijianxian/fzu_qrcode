@@ -14,6 +14,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _didAutoRefreshOnStart = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scheduleAutoRefreshOnStart();
+    });
+  }
+
+  void _scheduleAutoRefreshOnStart() {
+    if (!mounted || _didAutoRefreshOnStart) {
+      return;
+    }
+
+    final userData = Provider.of<UserData>(context, listen: false);
+    if (userData.isInitialized) {
+      _didAutoRefreshOnStart = true;
+      _autoRefreshOnStart();
+      return;
+    }
+
+    late VoidCallback listener;
+    listener = () {
+      if (!mounted) {
+        userData.removeListener(listener);
+        return;
+      }
+
+      if (!userData.isInitialized || _didAutoRefreshOnStart) {
+        return;
+      }
+
+      _didAutoRefreshOnStart = true;
+      userData.removeListener(listener);
+      _autoRefreshOnStart();
+    };
+
+    userData.addListener(listener);
+  }
+
+  Future<void> _autoRefreshOnStart() async {
+    if (!mounted) return;
+    final userData = Provider.of<UserData>(context, listen: false);
+    if (!userData.isLoggedIn) {
+      return;
+    }
+
+    try {
+      await userData.getPayId();
+    } catch (e) {
+      debugPrint('[HomePage] 启动自动刷新失败: $e');
+    }
+  }
+
   Future<void> _refreshQrCode() async {
     final userData = Provider.of<UserData>(context, listen: false);
     if (!userData.isLoggedIn) {
@@ -28,12 +83,6 @@ class _HomePageState extends State<HomePage> {
       await userData.getPayId();
     } catch (e) {
       debugPrint('[HomePage] 获取失败: $e');
-
-      if (!mounted) {
-        return;
-      }
-
-      Navigator.of(context).pop();
 
       if (!mounted) {
         return;

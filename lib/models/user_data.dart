@@ -64,6 +64,7 @@ typedef TwoFactorAuthCallback = Future<String?> Function(
 class UserData extends ChangeNotifier {
   final FileStorage _storage = FileStorage();
   late final Dio _dio;
+  bool _initialized = false;
 
   UserData() {
     // 初始化 Dio，设置合理的超时时间
@@ -94,6 +95,7 @@ class UserData extends ChangeNotifier {
   List<PayId> get payIdList => _payIdList;
   IdentifyId get identifyID => _identifyID;
   bool get isLoggedIn => _ssoCookie.isNotEmpty;
+  bool get isInitialized => _initialized;
 
   void _log(String message) {
     if (kDebugMode) {
@@ -122,9 +124,11 @@ class UserData extends ChangeNotifier {
       }
       _log(
           '加载成功: studentId=${_studentId.isEmpty ? '空' : '已保存'}, ssoCookie=${_ssoCookie.isEmpty ? '空' : '已保存'}');
-      notifyListeners();
     } catch (e) {
       _log('加载存储数据失败: $e');
+    } finally {
+      _initialized = true;
+      notifyListeners();
     }
   }
 

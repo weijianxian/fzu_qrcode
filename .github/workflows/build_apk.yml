@@ -48,7 +48,7 @@ jobs:
           echo "storeFile=build.jks" >> android/app/key.properties
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/build.jks
 
-          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi
+          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi --release
 
       # 上传 APKs
       - name: Upload APKs

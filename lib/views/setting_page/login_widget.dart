@@ -39,6 +39,90 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
     super.dispose();
   }
 
+  Future<String?> _showTwoFactorDialog(
+    String phone,
+    String tip,
+    Future<void> Function() sendSms,
+  ) async {
+    final codeController = TextEditingController();
+    bool sending = false;
+
+    final result = await showDialog<String?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return StatefulBuilder(builder: (context, setState) {
+          Future<void> onSendPressed() async {
+            try {
+              setState(() => sending = true);
+              await sendSms();
+              if (mounted) {
+                ScaffoldMessenger.of(this.context).showSnackBar(
+                  const SnackBar(content: Text('验证码已发送')),
+                );
+              }
+            } catch (e) {
+              if (mounted) {
+                ScaffoldMessenger.of(this.context).showSnackBar(
+                  SnackBar(content: Text('发送失败: $e')),
+                );
+              }
+            } finally {
+              if (mounted) {
+                setState(() => sending = false);
+              }
+            }
+          }
+
+          return AlertDialog(
+            title: const Text('两步验证'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tip),
+                const SizedBox(height: 8),
+                Text('手机号: $phone'),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: sending ? null : onSendPressed,
+                    child: Text(sending ? '发送中...' : '发送验证码'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: codeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: '短信验证码',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(null),
+                child: const Text('取消'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(codeController.text.trim());
+                },
+                child: const Text('确认'),
+              ),
+            ],
+          );
+        });
+      },
+    );
+
+    codeController.dispose();
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
@@ -72,12 +156,32 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
                 userData.setStudentId(_studentIdController.text);
                 userData.setPassword(_passwordController.text);
 
-                DialogUtils.showLoadingDialog(context); // 显示加载对话框
+                var loadingShown = true;
+                DialogUtils.showLoadingDialog(context);
                 final currentContext = context;
                 try {
-                  await userData.loginAndSaveToken();
+                  Future<String?> twoFactorCallback(
+                    String phone,
+                    String tip,
+                    Future<void> Function() sendSms,
+                  ) async {
+                    if (mounted && loadingShown) {
+                      Navigator.of(currentContext).pop();
+                      loadingShown = false;
+                    }
+
+                    final code = await _showTwoFactorDialog(phone, tip, sendSms);
+
+                    if (mounted && !loadingShown) {
+                      DialogUtils.showLoadingDialog(currentContext);
+                      loadingShown = true;
+                    }
+                    return code;
+                  }
+
+                  await userData.loginAndSaveToken(twoFactorCallback);
                   await userData.getPayId();
-                  if (mounted) {
+                  if (mounted && loadingShown) {
                     Navigator.of(context).pop();
                     DialogUtils.showTipsDialog(currentContext, '成功', '登录成功');
                     // 隐藏键盘
@@ -85,7 +189,7 @@ class _LoginYMTwigitState extends State<LoginYMTwigit> {
                     passwordFocusNode.unfocus();
                   }
                 } catch (e) {
-                  if (mounted) {
+                  if (mounted && loadingShown) {
                     Navigator.of(context).pop();
 
                     DialogUtils.showAlertDialog(

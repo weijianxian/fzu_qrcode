@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               statusBarIconBrightness: Brightness.dark,
-              systemNavigationBarColor: Color.fromARGB(255, 242, 247, 251),
+              systemNavigationBarColor: Color.fromARGB(0, 255, 255, 255),
             ),
           )),
     );

@@ -42,11 +42,14 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
 
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=build.jks" >> android/app/key.properties
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/build.jks
+          cat > android/app/key.properties <<EOF
+          storePassword=${KEYSTORE_PASSWORD}
+          keyPassword=${KEY_PASSWORD}
+          keyAlias=${KEY_ALIAS}
+          storeFile=build.jks
+          EOF
+
+          echo "${KEYSTORE_BASE64}" | base64 --decode > android/app/build.jks
 
           flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi --release
 
